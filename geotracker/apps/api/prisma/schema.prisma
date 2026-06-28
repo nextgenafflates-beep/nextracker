@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String              @id @default(cuid())
+  email        String              @unique
+  passwordHash String?
+  fullName     String
+  status       String              @default("pending")
+  provider     String              @default("email")
+  providerId   String?
+  approvedAt   DateTime?
+  lastLoginAt  DateTime?
+  memberships  WorkspaceMember[]
+  createdAt    DateTime            @default(now())
+}
+
+model Workspace {
+  id        String             @id @default(cuid())
+  name      String
+  members   WorkspaceMember[]
+  links     Link[]
+  createdAt DateTime           @default(now())
+}
+
+model WorkspaceMember {
+  id          String    @id @default(cuid())
+  userId      String
+  workspaceId String
+  role        String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+}
+
+model Domain {
+  id          String   @id @default(cuid())
+  workspaceId String
+  hostname    String   @unique
+  isActive    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  links       Link[]
+}
+
+model Link {
+  id               String         @id @default(cuid())
+  workspaceId      String
+  domainId         String?
+  name             String
+  slug             String
+  defaultUrl       String
+  botFilterEnabled Boolean        @default(false)
+  botRedirectUrl   String         @default("https://www.google.com")
+  status           String         @default("active")
+  workspace        Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  domain           Domain?        @relation(fields: [domainId], references: [id], onDelete: SetNull)
+  geoRules         LinkGeoRule[]
+  clicks           ClickEvent[]
+  createdAt        DateTime       @default(now())
+
+  @@unique([domainId, slug])
+  @@index([workspaceId, createdAt])
+}
+
+model LinkGeoRule {
+  id          String   @id @default(cuid())
+  linkId      String
+  countryCode String
+  url         String
+  priority    Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  link        Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@index([linkId, priority])
+}
+
+model ClickEvent {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  linkId          String
+  matchedRuleId   String?
+  countryCode     String?
+  destination     String
+  ts              DateTime @default(now())
+  ua              String?
+  referrer        String?
+  ipAddress       String?
+  browser         String?
+  device          String?
+  os              String?
+  isBot           Boolean  @default(false)
+  isDuplicate     Boolean  @default(false)
+  duplicateReason String?
+  link            Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, ts])
+  @@index([linkId, ts])
+  @@index([workspaceId, isDuplicate])
+}
+
+model AnalyticsDaily {
+  id          String   @id @default(cuid())
+  workspaceId String
+  date        DateTime
+  clicks      Int      @default(0)
+  revenue     Decimal  @default(0) @db.Decimal(12, 4)
+
+  @@unique([workspaceId, date])
+}

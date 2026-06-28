@@ -1,0 +1,10 @@
+{
+  "buildCommand": "pnpm install && pnpm build",
+  "installCommand": "pnpm install",
+  "outputDirectory": "apps/web/.next",
+  "framework": "nextjs",
+  "env": [
+    "NEXT_PUBLIC_API_URL",
+    "NEXT_PUBLIC_APP_URL"
+  ]
+}

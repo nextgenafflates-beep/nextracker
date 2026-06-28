@@ -1,0 +1,29 @@
+stages: [lint, typecheck, build, migrate]
+
+default:
+  image: node:22
+  before_script:
+    - corepack enable
+    - pnpm install --frozen-lockfile
+
+lint:
+  stage: lint
+  script:
+    - pnpm lint
+
+typecheck:
+  stage: typecheck
+  script:
+    - pnpm typecheck
+
+build:
+  stage: build
+  script:
+    - pnpm build
+
+migrate:
+  stage: migrate
+  script:
+    - pnpm --filter @geotrackr/api prisma:deploy
+  only:
+    - main

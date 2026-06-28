@@ -1,0 +1,7 @@
+ALTER TABLE "User"
+ADD COLUMN "status" TEXT NOT NULL DEFAULT 'pending',
+ADD COLUMN "provider" TEXT NOT NULL DEFAULT 'email',
+ADD COLUMN "providerId" TEXT,
+ADD COLUMN "approvedAt" TIMESTAMP(3),
+ADD COLUMN "lastLoginAt" TIMESTAMP(3),
+ALTER COLUMN "passwordHash" DROP NOT NULL;
