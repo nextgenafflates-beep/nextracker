@@ -59,7 +59,7 @@ jobs:
       - name: Deploy to Vercel (pinned CLI, debug)
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        working-directory: geotracker/apps/web
+        working-directory: geotracker
         run: |
           echo "Using VERCEL_TOKEN (present): ${VERCEL_TOKEN:+yes}"
           vercel --version
