@@ -35,10 +35,6 @@ jobs:
         working-directory: geotracker
         run: pnpm install --frozen-lockfile
 
-      - name: Build `geotracker/apps/web`
-        working-directory: geotracker/apps/web
-        run: pnpm build
-
       - name: Check Vercel token
         run: |
           if [ -z "${VERCEL_TOKEN}" ]; then
@@ -56,22 +52,14 @@ jobs:
           which vercel
           vercel --version
 
-      - name: Build with Vercel
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        working-directory: geotracker/apps/web
-        run: |
-          vercel pull --yes --token $VERCEL_TOKEN
-          vercel build --prod --token $VERCEL_TOKEN
-
-      - name: Deploy to Vercel (pinned CLI, debug)
+      - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         working-directory: geotracker/apps/web
         run: |
           echo "Using VERCEL_TOKEN (present): ${VERCEL_TOKEN:+yes}"
           vercel --version
-          vercel deploy --prebuilt --prod --yes --token $VERCEL_TOKEN
+          vercel deploy --prod --yes --token $VERCEL_TOKEN
 
 # Notes:
 # - Create a Vercel personal token and save it as `VERCEL_TOKEN` in GitHub Secrets.
