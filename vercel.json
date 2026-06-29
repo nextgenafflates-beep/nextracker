@@ -1,6 +1,5 @@
 {
   "framework": "nextjs",
-  "rootDirectory": "geotracker/apps/web",
   "installCommand": "corepack enable && pnpm install --frozen-lockfile",
   "buildCommand": "pnpm build",
   "outputDirectory": ".next"
