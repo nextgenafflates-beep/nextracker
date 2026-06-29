@@ -19,7 +19,7 @@ jobs:
         run: node --version
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
           version: 9
 
@@ -53,7 +53,7 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           echo "Using VERCEL_TOKEN (present): ${VERCEL_TOKEN:+yes}"
-          npx --yes vercel@28 --debug --prod --confirm --token $VERCEL_TOKEN --cwd geotracker/apps/web
+          npx --yes vercel@47.2.2 --debug --prod --confirm --token $VERCEL_TOKEN --cwd geotracker/apps/web
 
 # Notes:
 # - Create a Vercel personal token and save it as `VERCEL_TOKEN` in GitHub Secrets.
