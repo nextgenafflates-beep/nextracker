@@ -7,13 +7,15 @@ const inter = Inter({ subsets: ['latin'] });
 const dmSans = DM_Sans({ subsets: ['latin'], weight: ['700'] });
 const mono = JetBrains_Mono({ subsets: ['latin'] });
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://localhost:3000');
+
 export const metadata: Metadata = {
   title: {
     default: 'NexaTrack',
     template: '%s | NexaTrack'
   },
   description: 'Smart tracking links for modern growth teams.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://localhost:3000'),
+  metadataBase: new URL(appUrl),
   openGraph: {
     title: 'NexaTrack',
     description: 'Smart tracking links for modern growth teams.',

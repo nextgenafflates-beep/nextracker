@@ -6,12 +6,16 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   
   // Validate required environment variables
-  const requiredEnvVars = ['DATABASE_URL', 'REDIS_URL'];
+  const requiredEnvVars = ['DATABASE_URL'];
   for (const envVar of requiredEnvVars) {
     if (!process.env[envVar]) {
       logger.error(`Missing required environment variable: ${envVar}`);
       process.exit(1);
     }
+  }
+
+  if (!process.env.REDIS_URL) {
+    logger.warn('REDIS_URL is not set; queue processing will be disabled');
   }
   
   const app = await NestFactory.create(AppModule);
